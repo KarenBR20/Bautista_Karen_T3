@@ -1,0 +1,105 @@
+---
+title: "Red de Co-Gustos"
+author: "Karen Bautista"
+date: "21/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Red de Co-Gustos
+
+*1.Cargar datos para redes dicotomica y pesada:* 
+
+```{r gustos}
+gustos<-read.csv("C:/Users/EQUIPO/Documents/R/RClasses/ClaseR/Genomica/series.csv") #Cargar los datos
+row.names(gustos)<-gustos[,1]
+gustos<-gustos[,-1] #quitar lineas extra
+mgustos<-cor(gustos) #matriz de correlacion para red pesada
+
+magustos<-(1+mgustos)/2
+diag(magustos)<-0
+
+dgustos<-ifelse(magustos>0.5,1,0)
+View(dgustos) #matriz de adyacencia para red dicotomica
+```
+
+*2. Dibujar 3 layouts para red pesada:*
+
+```{r pesada, echo=FALSE}
+library(igraph)
+rgustos<-graph_from_adjacency_matrix(mgustos) #se genera un grafo a partir de la matriz de correlacion
+plot(rgustos, layout=layout.sphere, main="sphere") #layouts para red pesada
+plot(rgustos, layout=layout.circle, main="circle")
+plot(rgustos, layout=layout.random, main="random")
+```
+
+*2.1 Dibujar 3 layouts para red Dicotomica:*
+
+```{r dicotomica}
+rdgustos<-graph_from_adjacency_matrix(dgustos) #se genera un grafo a partir de la matriz de adyacencia
+plot(rdgustos, layout=layout.sphere, main="sphere") #layouts para red dicotomica
+plot(rdgustos, layout=layout.circle, main="circle")
+plot(rdgustos, layout=layout.random, main="random")
+```
+
+*3. Distribucion de conectividades (D):*
+
+```{r degree, echo=FALSE}
+di<-degree(rdgustos, mode="in")
+plot(di)
+```
+
+*4. Los nodos mas conectados:*
+
+```{r conect, echo=FALSE}
+a_in<-degree(rdgustos,mode="in") #Saca el numero de conexiones que tiene cada serie
+sort(a_in, decreasing = TRUE)# Se ordenan de mayor a menor # de conexiones
+# Los mas conectados son: Squid Game, HIMYM y Big Bang Theory
+```
+
+*5. Centralidades (D):*
+
+```{r central, echo=FALSE}
+cb<-centr_betw(rdgustos)
+cb
+cc<-centr_clo(rdgustos)
+cc
+cd<-centr_degree(rdgustos)
+cd
+```
+
+*5. Clusters para D:*
+
+```{r clusterd, echo=FALSE}
+wt<-cluster_walktrap(rdgustos)
+plot(wt,rdgustos)
+
+op<-cluster_optimal(rdgustos)
+plot(op,rdgustos)
+
+eb<-cluster_edge_betweenness(rdgustos)
+plot(eb,rdgustos)
+```
+
+*5.2. Clusters para P:*
+
+```{r clusterp, echo=FALSE}
+wt<-cluster_walktrap(rgustos)
+plot(wt,rgustos)
+
+op<-cluster_optimal(rgustos)
+plot(op,rgustos)
+
+eb<-cluster_edge_betweenness(rgustos)
+plot(eb,rgustos)
+```
+
+*6. Las redes D y P son dirigidas o no?*
+Ambas redes (D y P) son dirigidas. Para la red D, en uno de los metodos de clusterizacion (cluster_optimal) se puede observar que hay dos grupos. El hecho de que existan clusters, a pesar de estar iterlapados muchos de los nodos, indica que las coneciones pueden hacerse de un nodo al otro, pero no necesariamente tener esa misma conexion de forma reversiva. Esto indica que tienen una direccionalidad.
+Para la red P, esta puede considerarse dirigida simplemente por ser una red pesada, es decir, porque las conexiones tienen un valor. Este valor dictara que tan importante puede ser esa conexion y ademas da direccionalidad, se ve mas que nada en los nodos que se conectan consigo mismos. 
+
+*7. ¿Como se pueden encontrar clicas?*
+Una forma de encontrar grupos o clicas, es determinando la distancia entre aquellos nodos que aparentan tener una caracteristica que las una. Generalmente la distancia es una buena medida para denotar cuales nodos son mas similares entre si que el resto de la red.

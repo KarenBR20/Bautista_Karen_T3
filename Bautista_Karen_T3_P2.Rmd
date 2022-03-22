@@ -1,0 +1,68 @@
+---
+title: "Red Booleana"
+author: "Karen Bautista"
+date: "18/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Red Booleana
+
+*1. Red de regulacíon transripciona*:
+
+```{r red}
+library(BoolNet)
+bred<-loadNetwork("C:/Users/EQUIPO/Documents/R/RClasses/ClaseR/Genomica/mi_red.txt")
+bred
+```
+
+*2. Tablas de verdad de las reglas:*
+
+```{r verdad, echo=FALSE}
+tabA<- matrix(c(0,0,0,0,1,0,1,0,1,1,1,0), ncol = 3 , byrow = TRUE)
+colnames(tabA)<-c("A","!E","A & !E")
+tabA
+
+tabB<- matrix(c(0,0,0,0,1,0,1,0,0,1,1,1), ncol = 3 , byrow = TRUE)
+colnames(tabB)<-c("A","D","A & D")
+tabB
+
+tabC<- matrix(c(0,0,0,0,1,0,1,0,1,1,1,0), ncol = 3 , byrow = TRUE)
+colnames(tabC)<-c("A","!D","A & !D")
+tabC
+
+tabD<- matrix(c(0,0,0,0,1,0,1,0,0,1,1,1), ncol = 3 , byrow = TRUE)
+colnames(tabD)<-c("C","E","C & E")
+tabD
+
+tabE<- matrix(c(0,0,0,0,1,0,1,0,1,1,1,0), ncol = 3 , byrow = TRUE)
+colnames(tabE)<-c("E","!B","E & !B")
+tabE
+
+```
+
+
+*3. Reglas de la red booleana:*
+
+A partir de la red cargada se puede generar una representacion simbolica de la red booleana, es decir se muestran las reglas de la red.
+```{r reglasb, echo=FALSE}
+truth<-truthTableToSymbolic(bred)
+truth
+```
+
+*4. Atractores de la red:*
+
+```{r atractor, echo=FALSE}
+atracttors<-getAttractors(bred) #Te da los atractores
+atracttors
+```
+
+*5. Estado final:*
+Te da una tabla con las transiciones de todos los estados
+```{r final, echo=FALSE}
+getTransitionTable(atracttors) #Te da una tabla con las transiciones de todos los estados
+```
+

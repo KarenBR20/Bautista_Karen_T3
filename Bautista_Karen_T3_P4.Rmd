@@ -1,0 +1,36 @@
+---
+title: "Red de Señalizacion"
+author: "Karen Bautista"
+date: "21/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Red de Señalizacion
+
+*1. Elabora una representacíon verbal de la red:*
+
+CIS induce la produccion de Ca 2+ c, el cual es un producto necesario para el funcionamiento del resto de la red. Ca 2+ induce la produccion de varios componentes, incluida PLC, NOS, KEV, AnionEM y Ca 2+ ATPasa. Si se toma como ejemplo a PLC, sabemos que esta induce produccion de InsP3 que a su vez activara a CIS y volvera a producir Ca 2+. Esta no es la unica via que se tiene para volver a activar CIS, ya que Ca 2+ tambien activara NOS, que activara a NO. NO despues podra activar a otros dos componentes (GC y ADPRc) que a su vez activaran otros dos componentes (cGMP y cADPR), los cuales volveran a activar CIS. Ca 2+ tambien produce otras activaciones que llevaran como consecuencia a la despolarizacion de la membrana celular. Entre estos estan KEV y AnionEM que al ser activados conducen directamente a la Depolar. Ca 2+ es capaz de llevar a la depolarizacion por su cuenta, pero tiene estas vias alternas como un control. Ademas estas vias pueden tambien llevar a que se inhiba la despolarizacion como tal, por ejemplo Ca 2+ ATPasa inhibe a Ca 2+, que al no estar activa inhibe a H ATPase y esta inhibe la despolarizacion. 
+
+
+*2. Elabora una tabla de posibles reglas de la red:*
+
+```{r señal, echo=FALSE}
+library(BoolNet)
+senal<-loadNetwork("C:/Users/EQUIPO/Documents/R/RClasses/ClaseR/Genomica/señal.txt")
+senal
+```
+
+
+*3. Encuentra y discute biólogicamente el significado de los atractores*
+
+```{r atractor, echo=FALSE}
+atractor<-getAttractors(senal)
+atractor
+plotAttractors(atractor) #Plotea los atractores
+```
+
+A partir de la tabla, se puede observar que tiene atractores con 6 estados. Se puede observar que en algun punto, todas estas enzimas se activaran en uno o mas de esos 6 estados. Se tiene por ejemplo a CIS, H_ATPase y Closure que son las enzimas que estan activas en 4 de los 6 estados (estan activas por mas estados que el resto). Esto puede indicar que estas enzimas tienen mas de una enzima que produce algo que las active o simplemente tiene pocas vias de inactivacion, por lo que se puede inferir que estas enzimas requieren estar activadas por bastante tiempo, es decir, pueden tener mayor importancia en la red.  
